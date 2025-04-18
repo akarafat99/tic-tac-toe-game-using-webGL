@@ -1,0 +1,160 @@
+/* General body styles */
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    display: grid;
+    place-items: center;
+    /* Centers content both vertically and horizontally */
+    /* height: 100vh; */
+    background-color: #f0f0f0;
+    margin: 0;
+}
+
+/* Status display (Turn Display) */
+h1#turnDisplay {
+    font-size: 36px;
+    font-weight: bold;
+    text-align: center;
+    margin: 0;
+    padding: 10px;
+    color: #333;
+    width: 100%;
+    background-color: #e6e6e6;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Grid container for canvases */
+.canvas-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 150px);
+    grid-gap: 5px;
+    margin-top: 0px;
+}
+
+/* Individual canvas styles */
+canvas {
+    background-color: #fff;
+    border: 2px solid #b1afaf;
+}
+
+/* Button container */
+.button-container {
+    margin: 5px;
+    /* Add space above the buttons */
+}
+
+/* Styles for buttons */
+button {
+    padding: 10px 20px;
+    /* Padding for buttons */
+    font-size: 16px;
+    /* Font size */
+    border: none;
+    /* Remove border */
+    border-radius: 5px;
+    /* Rounded corners */
+    cursor: pointer;
+    /* Pointer cursor on hover */
+    margin: 0 0px;
+    /* Space between buttons */
+}
+
+/* Stop and Play Again button colors */
+#stopButton {
+    background-color: #f44336;
+    /* Red color for Stop button */
+    color: white;
+    /* White text */
+}
+
+#playAgainButton {
+    background-color: #4CAF50;
+    /* Green color for Play Again button */
+    color: white;
+    /* White text */
+}
+
+button:hover {
+    opacity: 0.8;
+    /* Slightly transparent on hover */
+}
+
+/* Popup styles */
+#popupAlert {
+    display: none;
+    /* Hidden by default */
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: linear-gradient(135deg, #f0f0f0, #d9d9d9);
+    /* Gradient background */
+    border: 0px solid #333;
+    box-shadow: 0 0px 20px rgba(0, 0, 0, 0.3);
+    padding: 30px;
+    width: 400px;
+    /* Increased width */
+    height: 150px;
+    /* Increased height */
+    z-index: 1000;
+    /* Make sure it appears above other elements */
+    border-radius: 10px;
+    /* Rounded corners */
+    opacity: 0;
+    /* Start with invisible */
+    animation: popupAnimation 0.5s forwards;
+    /* Animation effect */
+}
+
+/* Animation keyframes */
+@keyframes popupAnimation {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -60%);
+        /* Slightly higher position */
+    }
+
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%);
+        /* Final centered position */
+    }
+}
+
+/* Close icon for popup */
+.popup-close {
+    cursor: pointer;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 24px;
+    /* Increased size */
+    color: #999;
+    transition: color 0.3s, transform 0.3s;
+    /* Transition for smooth effects */
+}
+
+.popup-close:hover {
+    color: #f00;
+    /* Change color on hover */
+    transform: scale(1.1);
+    /* Slightly enlarge on hover */
+}
+
+.popup-close:active {
+    transform: scale(0.9);
+    /* Shrink when clicked for feedback */
+}
+
+/* Overlay behind the popup */
+#overlay {
+    display: none;
+    /* Hidden by default */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 900;
+    /* Make sure it appears behind the popup */
+}

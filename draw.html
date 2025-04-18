@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tic Tac Toe WebGL</title>
+    <link rel="stylesheet" href="./style.css">
+</head>
+
+<body>
+    <!-- Overlay -->
+    <div id="overlay"></div>
+
+    <!-- Popup Alert -->
+    <div id="popupAlert">
+        <span class="popup-close" onclick="closePopup()">×</span>
+        <h1 id="popupMessage">Player X wins!</h1>
+    </div>
+
+    <!-- js to control popup -->
+    <script>
+        function showPopup(message) {
+            document.getElementById("popupMessage").innerText = message;
+            document.getElementById("popupAlert").style.display = "block";
+            document.getElementById("overlay").style.display = "block";
+        }
+
+        function closePopup() {
+            document.getElementById("popupAlert").style.display = "none";
+            document.getElementById("overlay").style.display = "none";
+        }
+
+    </script>
+
+
+    <h1 id="turnDisplay">Player 1's Turn</h1>
+
+    <br>
+    <div class="canvas-grid">
+        <canvas id="canvas1" width="150" height="150"></canvas>
+        <canvas id="canvas2" width="150" height="150"></canvas>
+        <canvas id="canvas3" width="150" height="150"></canvas>
+        <canvas id="canvas4" width="150" height="150"></canvas>
+        <canvas id="canvas5" width="150" height="150"></canvas>
+        <canvas id="canvas6" width="150" height="150"></canvas>
+        <canvas id="canvas7" width="150" height="150"></canvas>
+        <canvas id="canvas8" width="150" height="150"></canvas>
+        <canvas id="canvas9" width="150" height="150"></canvas>
+    </div>
+
+    <div class="button-container"></div>
+    <button id="playAgainButton" onclick="location.reload();">Play Again</button>
+    </div>
+
+    <script src="./triangle.js"></script>
+    <script src="./rectangle.js"></script>
+
+    <script>
+        // Game variables
+        var currentPlayer = 1; // Player 1 starts (1 for rectangle, 2 for triangle)
+        var gameBoard = Array(9).fill(0); // Game board state (0: empty, 1: rectangle, 2: triangle)
+        var gameOver = false;
+
+        // Get the canvas elements and WebGL contexts
+        var canvases = [
+            document.getElementById("canvas1"),
+            document.getElementById("canvas2"),
+            document.getElementById("canvas3"),
+            document.getElementById("canvas4"),
+            document.getElementById("canvas5"),
+            document.getElementById("canvas6"),
+            document.getElementById("canvas7"),
+            document.getElementById("canvas8"),
+            document.getElementById("canvas9")
+        ];
+
+        var glContexts = canvases.map(canvas => canvas.getContext("webgl"));
+
+        // Add event listeners for each canvas
+        for (let index = 0; index < canvases.length; index++) {
+            canvases[index].addEventListener('click', function () {
+                if (!gameOver && gameBoard[index] === 0) {
+                    // Player makes a move
+                    if (currentPlayer === 1) {
+                        drawRectangle(glContexts[index], 0); // Player 1: draw rectangle
+                        gameBoard[index] = 1;
+                    } else {
+                        drawTriangle(glContexts[index], 0); // Player 2: draw triangle
+                        gameBoard[index] = 2;
+                    }
+
+                    // Check if the game is over
+                    checkGameOver();
+
+                    // Switch to the other player
+                    currentPlayer = currentPlayer === 1 ? 2 : 1;
+
+                    if(!gameOver) {
+                        var statusText = `Player ${currentPlayer}'s Turn`;
+                        updateTurnDisplay(statusText);
+                    }
+                }
+            });
+        }
+
+        // Function to check if the game is over
+        function checkGameOver() {
+            // Winning combinations for Tic-Tac-Toe (row, column, diagonal)
+            var winCombinations = [
+                [0, 1, 2], [3, 4, 5], [6, 7, 8], // Rows
+                [0, 3, 6], [1, 4, 7], [2, 5, 8], // Columns
+                [0, 4, 8], [2, 4, 6]             // Diagonals
+            ];
+
+            // Check if a player has won
+            for (let i = 0; i < winCombinations.length; i++) {
+                var combination = winCombinations[i];
+                var a = combination[0], b = combination[1], c = combination[2];
+                if (gameBoard[a] !== 0 && gameBoard[a] === gameBoard[b] && gameBoard[a] === gameBoard[c]) {
+                    gameOver = true;
+
+                    var statusText = `Player ${currentPlayer} win`;
+                    updateTurnDisplay(statusText);
+
+                    // Highlight the winning combination by redrawing the shapes with rotation
+                    highlightWinningCombination(combination, gameBoard[a]);
+                    return; // Exit the function after a win is found
+                }
+            }
+
+            // Check if the game is a draw (all squares filled)
+            if (!gameOver && gameBoard.every(cell => cell !== 0)) {
+                gameOver = true;
+
+                var statusText = `Game draw !`;
+                updateTurnDisplay(statusText);
+
+                alert('The game is a draw!');
+            }
+        }
+
+        // Function to highlight winning combination
+        function highlightWinningCombination(combination, player) {
+            for (let i = 0; i < combination.length; i++) {
+                let index = combination[i];
+                if (player === 1) {
+                    drawRectangle(glContexts[index], 1); // Redraw rectangle with rotation
+                } else {
+                    drawTriangle(glContexts[index], 1); // Redraw triangle with rotation
+                }
+            }
+
+            // Set a timeout to alert the winner after the highlighting
+            setTimeout(() => {
+                showPopup(`Player ${player} wins!`);
+            }, 500);
+
+        }
+
+        // Function to update the turn display
+        function updateTurnDisplay(text1) {
+            document.getElementById("turnDisplay").innerText = text1;
+        }
+    </script>
+</body>
+
+</html>
